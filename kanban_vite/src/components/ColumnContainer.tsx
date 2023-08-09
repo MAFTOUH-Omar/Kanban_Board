@@ -2,20 +2,23 @@ import { Column, Id } from "../types";
 interface Props {
     column: Column;
     deleteColumn: (id: Id)=> void;
+    updateColumn: (id: Id, title: string) => void;
 }
 import { useSortable } from "@dnd-kit/sortable";
 import TrashIcon from '../icons/TrashIcon';
 import {CSS} from "@dnd-kit/utilities";
+import { useState } from "react";
 function ColumnContainer(props: Props){
-    const {column , deleteColumn} = props;
+    const {column , deleteColumn , updateColumn} = props;
+    const [editMode , setEditMode] = useState(false);
     const { setNodeRef , attributes , listeners , transform , transition , isDragging } 
-    = 
-        useSortable({
+    = useSortable({
             id: column.id,
             data: {
                 type: "Column",
                 column,
             },
+            disabled: editMode,
         });
     const style = {
         transition,
@@ -53,6 +56,9 @@ function ColumnContainer(props: Props){
             <div 
                 {...attributes}
                 {...listeners}
+                onClick={()=>{
+                    setEditMode(true);
+                }}
                 className='
                 bg-mainBackgroundColor
                 text-md
@@ -81,7 +87,26 @@ function ColumnContainer(props: Props){
                     ">
                         0
                     </div>
-                    {column.title}
+                    {!editMode && column.title}
+                    {editMode &&
+                    <input 
+                        autoFocus 
+                        onBlur={()=>{setEditMode(false)}}
+                        onKeyDown={(e)=>{
+                            if(e.key !== "Enter") return;
+                            setEditMode(false);
+                        }}
+                        value={column.title}
+                        onChange={(e)=>updateColumn(column.id , e.target.value)}
+                        className="
+                            bg-black
+                            focus:border-rose-500
+                            border
+                            rounded
+                            outline-none
+                            px-2
+                        "
+                    />}
                 </div>
                 <button 
                 onClick={()=>{
