@@ -14,7 +14,7 @@ function KanbanBoard(){
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 3,
+                distance: 10,
             }
         })
     )
@@ -39,6 +39,7 @@ function KanbanBoard(){
                                 deleteColumn={deleteColumn} 
                                 updateColumn={updateColumn} 
                                 createTask={createTask}
+                                deleteTask={deleteTask}
                                 tasks={tasks.filter((tasks) => tasks.columnId=== col.id)}
                             />
                             ))}
@@ -72,6 +73,8 @@ function KanbanBoard(){
                         deleteColumn={deleteColumn}
                         updateColumn={updateColumn}
                         createTask={createTask}
+                        deleteTask={deleteTask}
+                        tasks={tasks.filter((tasks) => tasks.columnId=== activateColumn.id)}
                         />)
                         }
                     </DragOverlay>, 
@@ -87,6 +90,10 @@ function KanbanBoard(){
             content: `Task ${tasks.length + 1}`,
         };
         setTasks([...tasks,newTask]);
+    }
+    function deleteTask(id: Id){
+        const newTasks = tasks.filter((tasks) => tasks.id !== id);
+        setTasks(newTasks);
     }
     function createNewColumn(){
         const columnToAdd: Column = {

@@ -4,6 +4,7 @@ interface Props {
     deleteColumn: (id: Id)=> void;
     updateColumn: (id: Id, title: string) => void;
     createTask: (columnId: Id) => void;
+    deleteTask: (id:Id) => void;
     tasks: Task[];
 }
 import { useSortable } from "@dnd-kit/sortable";
@@ -13,7 +14,7 @@ import { useState } from "react";
 import PlusIcon from "../icons/PlusIcon";
 import TaskCard from "./TaskCard";
 function ColumnContainer(props: Props){
-    const {column , deleteColumn , updateColumn , createTask , tasks} = props;
+    const {column , deleteColumn , updateColumn , createTask , tasks , deleteTask} = props;
     const [editMode , setEditMode] = useState(false);
     const { setNodeRef , attributes , listeners , transform , transition , isDragging } 
     = useSortable({
@@ -130,7 +131,7 @@ function ColumnContainer(props: Props){
             {/* Column Task container */}
             <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
                 {tasks.map((task) => (
-                    <TaskCard key={task.id} task={task} />
+                    <TaskCard key={task.id} task={task} deleteTask={deleteTask} />
                 ))}
             </div>
             {/* Column footer */}
